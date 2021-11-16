@@ -24,7 +24,7 @@ def login():
             print("Invalid username")
             flash(message="Invalid username",category='danger')
             return redirect(url_for('login'))
-        if user.check_password(form.password.data):
+        if not user.check_password(form.password.data):
             print("Invalid password")
             flash('Invalid password')
             return redirect(url_for('login'))
@@ -48,11 +48,6 @@ def register():
         return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user:
-            print('user name has been registered')
-            flash(message='user name has been registered',category='danger')
-            return render_template('register.html',form=form)
         user = User(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
         db.session.add(user)
