@@ -1,0 +1,9 @@
+# VSCode config
+.vscode/
+
+# Jetbrains config
+.idea/
+
+# Python Bytecode
+__pycache__/
+*.py[cod]

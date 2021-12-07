@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block head %}
+{{ super() }}
+
+{% endblock %}
+
+{% block page_content %}
+<a href="#cart">
+	<button id="floating-cart">
+		<span class="glyphicon glyphicon-shopping-cart"></span>
+		<b id="cart-count">0</b>
+	</button>
+</a>
+
+<div class="container">
+	<form action="{{url_for(function)}}" class="form-inline" METHOD="POST">
+		<div class="form-group">
+			<label for="filter">Sort By: </label>
+			<select style="width:200px;" selected="{{filter_by}}" class="form-control" id="filter" name="filter">
+				<option>{{filter_by}}</option>
+				{% for filter in filters %}
+				{% if filter != filter_by  %}
+				<option>{{filter}}</option>
+				{% endif %}
+				{% endfor %}
+			</select>
+		</div>
+		<div class="form-group">
+			<label for="category" style="margin-left:25px;">category: </label>
+			<select style="width:200px;" selected="{{category}}" class="form-control" id="category" name="category">
+				<option>{{category}}</option>
+				{% if category != "All"  %}
+				<option>All</option>
+				{% endif %}
+				{% for item in categorys %}
+				{% if item != category  %}
+				<option>{{item}}</option>
+				{% endif %}
+				{% endfor %}
+			</select>
+		</div>
+		<button type="submit" class="btn btn-primary">Submit</button>
+	</form>
+</div>
+<br>
+<div class="container">
+	<div class="row">
+		{% for product in products %}
+		<div class="col-md-3">
+			<div class="thumbnail">
+				<img src="{{product.imgLink}}" style="width:200px;height:200px;">
+				<div class="caption">
+					<b class="shop-item-title">{{product.title}}</b>
+				</div>
+				<p class="shop-item-price">${{product.originalPrice}}</p>
+				<button class="shop-item-button btn btn-success">
+					<span></span>	<b>Add to Cart</b>
+				</button>
+				<a href="{{url_for('app.item', id=product.id)}}" class="btn btn-Info">
+					<span></span>	<b>Information</b>
+				</a>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+</div>
+
+<section id="cart" class="container content-section">
+	<h1 class="section-header">Check Out</h1>
+	<div class="cart-row">
+		<span class="cart-item cart-header cart-column">Product</span>
+		<span class="cart-price cart-header cart-column">Price</span>
+		<span class="cart-quantity cart-header cart-column">Quantity</span>
+	</div>
+	<div class="cart-items">
+	</div>
+	<div class="cart-total">
+		<strong class="cart-total-title">Total</strong>
+		<span class="cart-total-price">$0</span>
+	</div>
+	<button class="btn btn-primary btn-purchase" type="button">Place Order</button>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="{{ url_for('static', filename='scripts.js') }}"></script>
+{% endblock %}
