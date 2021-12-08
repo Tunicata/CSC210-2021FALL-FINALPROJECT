@@ -5,7 +5,7 @@
 <div class="container">
     <form action="{{url_for('app.table')}}" METHOD="POST">
         <div class="form-group">
-           <label for="search">Search: </label>
+           <label for="search">Search by Name: </label>
            <input type="text" class="form-control" id="search" name="search">
        </div>
        <button type="submit" class="btn btn-primary">Submit</button>
@@ -14,15 +14,19 @@
    <br><br>
    <table style="width: 100%; table-layout: fixed; " id="ProductTable">
     <tr style="border: 1px solid black; border-collapse: collapse;">
-        <th style="text-align: center"><b>Category</b></th>
+        <th style="text-align: center"><b>ID</b></th>
         <th style="text-align: center"><b>Product</b></th>
+        <th style="text-align: center"><b>Type</b></th>
         <th></th>
         <th></th>
     </tr>
     {% for product in products %}
     <tr style="border: 1px solid black; border-collapse: collapse;">
-        <td style="text-align: center">{{product.category}}</td>
+        <td style="text-align: center">{{product.id}}</td>
         <td>{{product.title}}</td>
+        <td style="text-align: center">{{product.category}}</td>
+        <td style="text-align: center"><a href="{{url_for('app.update', id=product.id)}}" class="btn btn-primary btn-small">Update</a></td>
+        <td style="text-align: center"><a href="{{url_for('app.delete', id=product.id)}}" class="btn btn-danger btn-small">Delete</a></td>
     </tr>
     {% endfor %}
 </table>

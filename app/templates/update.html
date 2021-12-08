@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+<!-- {% import "bootstrap/wtf.html" as wtf %} -->
+{% block page_content %}
+<div class="page-header">
+    <h1><b>Update Listing:</b></h1>
+</div>
+<div class="container">
+    <div class="container">
+     <form action="{{url_for('app.update', id=update.id)}}" METHOD="POST">
+      <div class="form-group">
+        <label for="title">Product Name: </label>
+        <input type="text" class="form-control" id="title" name="title" placeholder="{{update.title}}" value="{{update.title}}">
+    </div>
+ <div class="form-group">
+    <label for="category">Product Type: </label>
+    <input type="text" class="form-control" id="category" name="category" placeholder="{{update.category}}" value="{{update.category}}">
+</div>
+<div class="form-group">
+    <label for="amount">Stock: </label>
+    <input type="number" class="form-control" id="amount" name="amount" placeholder="{{update.stockAmount}}" value="{{update.stockAmount}}">
+</div>
+<div class="form-group">
+    <label for="price">Price: </label>
+    <input type="number" step="any" class="form-control" id="price" name="price" placeholder="{{update.originalPrice}}" value="{{update.originalPrice}}">
+</div>
+<div class="form-group">
+    <label for="link">Image: </label>
+    <input type="text" class="form-control" id="link" name="link" placeholder="{{update.imgLink}}" value="{{update.imgLink}}">
+</div>
+<button type="submit" class="btn btn-primary">Submit</button>
+</form>
+</div>
+</div>
+{% endblock %}

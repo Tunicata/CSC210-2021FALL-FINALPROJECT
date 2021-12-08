@@ -6,12 +6,6 @@
 {% endblock %}
 
 {% block page_content %}
-<a href="#cart">
-	<button id="floating-cart">
-		<span class="glyphicon glyphicon-shopping-cart"></span>
-		<b id="cart-count">0</b>
-	</button>
-</a>
 
 <div class="container">
 	<form action="{{url_for(function)}}" class="form-inline" METHOD="POST">
@@ -40,7 +34,15 @@
 				{% endfor %}
 			</select>
 		</div>
-		<button type="submit" class="btn btn-primary">Submit</button>
+		<button type="submit" class="btn btn-primary">Update</button>
+		<div class="form-group">
+			<a href="#cart">
+				<button id="floating-cart" class="btn btn-primary">
+				<span class="glyphicon glyphicon-shopping-cart"></span>
+				<b id="cart-count">0</b>
+				</button>
+			</a>
+		</div>
 	</form>
 </div>
 <br>
@@ -49,11 +51,11 @@
 		{% for product in products %}
 		<div class="col-md-3">
 			<div class="thumbnail">
-				<img src="{{product.imgLink}}" style="width:200px;height:200px;">
+				<img class="shop-item-image" src="{{product.imgLink}}" style="width:200px;height:200px;">
 				<div class="caption">
 					<b class="shop-item-title">{{product.title}}</b>
+					<p class="shop-item-price">${{product.originalPrice}}</p>
 				</div>
-				<p class="shop-item-price">${{product.originalPrice}}</p>
 				<button class="shop-item-button btn btn-success">
 					<span></span>	<b>Add to Cart</b>
 				</button>
@@ -68,11 +70,6 @@
 
 <section id="cart" class="container content-section">
 	<h1 class="section-header">Check Out</h1>
-	<div class="cart-row">
-		<span class="cart-item cart-header cart-column">Product</span>
-		<span class="cart-price cart-header cart-column">Price</span>
-		<span class="cart-quantity cart-header cart-column">Quantity</span>
-	</div>
 	<div class="cart-items">
 	</div>
 	<div class="cart-total">

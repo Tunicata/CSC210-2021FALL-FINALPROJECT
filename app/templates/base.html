@@ -16,9 +16,10 @@
     </div>
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
+        <li><a href="{{url_for('app.table')}}">Stock Management</a></li>
+        <li><a href="{{url_for('app.table')}}">User Management</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="{{url_for('app.index')}}">Modify Item</a></li>
         <li><a href="{{url_for('auth.signup')}}">Sign Up</a></li>
         <li><a href="{{url_for('auth.login')}}">Log In</a></li>
         <li><a href="{{url_for('auth.logout')}}">Log Out</a></li>
