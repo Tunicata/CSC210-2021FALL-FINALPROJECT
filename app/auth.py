@@ -60,8 +60,8 @@ def logout():
     return redirect(url_for('app.index'))
 
 
-@auth.route('/info/<string:user_id>')
+@auth.route('/profile/<string:user_id>')
 @login_required
-def info(user_id):
+def profile(user_id):
     user_id = current_user.id
     pass

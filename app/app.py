@@ -3,6 +3,7 @@ from flask_login import current_user
 from .models import Products, Cart, User
 from . import db
 from flask_login import login_required
+from datetime import datetime
 
 app = Blueprint('app', __name__)
 
@@ -146,20 +147,38 @@ def delete_user(user_id):
         return render_template('error.html')
 
 
-@app.route('/top_up/<string:user_id>', methods=['GET', 'POST'])
+@app.route('/top_up', methods=['GET', 'POST'])
 @login_required
-def top_up_user(user_id):
-    pass
+def top_up_user():
+    return redirect(url_for('app.index'))
 
 
-@app.route("/cart_add/")
-def cart_add():
-    # cart = Cart(
-    #     products_id=request.args.get('products_id'),
-    #     number=request.args.get('number'),
-    #     user_id=session.get('user_id', 0)
-    # )
+@app.route("/cart_add/<string:curr_product_id>")
+@login_required
+def cart_add(curr_product_id):
+    cart = Cart.query.filter_by(product_id=curr_product_id).first()
 
-    # db.session.add(cart)
-    # db.session.commit()
+    if cart:
+        cart.number = cart.number + 1
+
+    else:
+        cart = Cart(
+            products_id=curr_product_id,
+            user_id=current_user.id,
+            number=request.args.get('number'),
+            add_time=datetime.now
+        )
+
+        db.session.add(cart)
+
+    try:
+        db.session.commit()
+        return redirect(url_for('app.index'))
+    except:
+        return render_template('error.html')
+
+
+@app.route("/check_out")
+@login_required
+def check_out():
     return redirect(url_for('app.index'))

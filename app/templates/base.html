@@ -24,7 +24,7 @@
         <li><a href="{{url_for('auth.signup')}}">Sign Up</a></li>
         <li><a href="{{url_for('auth.login')}}">Log In</a></li>
         <li><a href="{{url_for('auth.logout')}}">Log Out</a></li>
-        <li><a href="{{url_for('auth.info', user_id=current_user.id)}}">My Page</a></li>
+        <li><a href="{{url_for('auth.profile', user_id=current_user.id)}}">My Page</a></li>
       </ul>
     </div>
     {% if current_user.email%}

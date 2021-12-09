@@ -1,5 +1,4 @@
 from flask_login import UserMixin
-from datetime import datetime
 from . import db
 from . import login_manager
 
@@ -23,7 +22,7 @@ class Products(db.Model):
 
 
 class User(UserMixin, db.Model):
-    __tablename__ = 'Users'
+    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
@@ -47,9 +46,9 @@ class Cart(db.Model):
     __tablename__ = 'Cart'
     id = db.Column(db.Integer, primary_key=True)
     products_id = db.Column(db.Integer, db.ForeignKey('Products.id'))
-    user_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     number = db.Column(db.Integer, default=0)
-    add_time = db.Column(db.DateTime, index=True, default=datetime.now)
+    add_time = db.Column(db.DateTime, index=True)
 
     def __repr__(self):
         return "<Cart %r>" % self.id
@@ -61,7 +60,7 @@ class Order(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     product_id = db.Column(db.Integer, db.ForeignKey('Products.id'))
     comment = db.Column(db.String(255))
-    place_time = db.Column(db.DateTime, index=True, default=datetime.now)
+    place_time = db.Column(db.DateTime, index=True)
     cdk = db.Column(db.String(255))
 
     def __repr__(self):
