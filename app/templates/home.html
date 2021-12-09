@@ -37,11 +37,8 @@
 		<button type="submit" class="btn btn-primary">Update</button>
     {% if current_user.id %}
 		<div class="form-group">
-			<a href="#cart">
-				<button id="floating-cart" class="btn btn-primary">
+			<a href="{{url_for('app.cart')}}" class="btn btn-primary">
 				<span class="glyphicon glyphicon-shopping-cart"></span>
-				<b id="cart-count">0</b>
-				</button>
 			</a>
 		</div>
     {% endif %}
@@ -58,9 +55,10 @@
 					<b class="shop-item-title">{{product.title}}</b>
 					<p class="shop-item-price">${{product.originalPrice}}</p>
 				</div>
-				<button class="shop-item-button btn btn-success">
-					<span></span>	<b>Add to Cart</b>
-				</button>
+                <a href="{{url_for('app.cart_add', curr_product_id=product.id)}}" class="btn btn-success">Add to Cart</a>
+{#				<button class="shop-item-button btn btn-success" href="{{url_for('app.cart_add', curr_product_id=product.id)}}">#}
+{#					<span></span>	<b>Add to Cart</b>#}
+{#				</button>#}
 				<a href="{{url_for('app.item', id=product.id)}}" class="btn btn-Info">
 					<span></span>	<b>Information</b>
 				</a>
@@ -70,18 +68,18 @@
 	</div>
 </div>
 
-{% if current_user.id %}
-    <section id="cart" class="container content-section">
-        <h1 class="section-header">Check Out</h1>
-        <div class="cart-items">
-        </div>
-        <div class="cart-total">
-            <strong class="cart-total-title">Total</strong>
-            <span class="cart-total-price">$0</span>
-        </div>
-        <button class="btn btn-primary btn-purchase" type="button">Place Order</button>
-    </section>
-{% endif %}
+{#{% if current_user.id %}#}
+{#    <section id="cart" class="container content-section">#}
+{#        <h1 class="section-header">Check Out</h1>#}
+{#        <div class="cart-items">#}
+{#        </div>#}
+{#        <div class="cart-total">#}
+{#            <strong class="cart-total-title">Total</strong>#}
+{#            <span class="cart-total-price">$0</span>#}
+{#        </div>#}
+{#        <button class="btn btn-primary btn-purchase" type="button">Place Order</button>#}
+{#    </section>#}
+{#{% endif %}#}
 
 {% endblock %}
 

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block page_content %}
+<div class="page-header">
+</div>
+<div class="container">
+   <table style="width: 100%; table-layout: fixed; " id="ProductTable">
+    <tr style="border: 1px solid black; border-collapse: collapse;">
+        <th style="text-align: center"><b>ID</b></th>
+        <th style="text-align: center"><b>Image</b></th>
+        <th style="text-align: center"><b>Product</b></th>
+        <th style="text-align: center"><b>Price</b></th>
+        <th style="text-align: center"><b>Number</b></th>
+        <th style="text-align: center"><b>Add Time</b></th>
+        <th></th>
+        <th></th>
+    </tr>
+    {% set total = [0] %}
+    {% for item in cart %}
+        {% set product = Products.query.filter_by(id=item.products_id).first() %}
+        {% set price =  product.originalPrice * item.number%}
+        <tr style="border: 1px solid black; border-collapse: collapse;">
+            <td style="text-align: center">{{item.id}}</td>
+            <td><img src="{{product.imgLink}}" style="width:90px; height:70px" alt=""></td>
+            <td>{{product.title}}</td>
+            <td>{{price}}</td>
+            <td style="text-align: center">{{item.number}}</td>
+            <td style="text-align: center">{{item.add_time}}</td>
+            <td style="text-align: center"><a href="{{url_for('app.cart_delete', cart_id=item.id)}}" class="btn btn-primary btn-small">Delete</a></td>
+            <td style="text-align: center"><a href="{{url_for('app.cart_modify_num', cart_id=item.id)}}" class="btn btn-primary btn-small">+</a></td>
+            <td style="text-align: center"><a href="{{url_for('app.cart_modify_num', cart_id=-item.id)}}" class="btn btn-primary btn-small">-</a></td>
+        </tr>
+         {% set _ = total.append(total.pop() + price|float) %}
+    {% endfor %}
+    </table>
+    <form action="{{url_for('app.cart')}}" METHOD="POST">
+        <h2>Total:  {{ total[0] }}</h2>
+        <a href="{{url_for('app.check_out', total_price = total[0])}}" class="btn btn-primary">Check Out</a>
+        <a href="{{url_for('app.clear_cart')}}" class="btn btn-primary">Clear All</a>
+    </form>
+</div>
+{% endblock %}

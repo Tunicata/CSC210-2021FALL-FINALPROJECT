@@ -57,9 +57,8 @@ class Cart(db.Model):
 class Order(db.Model):
     __tablename__ = 'Order'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     product_id = db.Column(db.Integer, db.ForeignKey('Products.id'))
-    comment = db.Column(db.String(255))
     place_time = db.Column(db.DateTime, index=True)
     cdk = db.Column(db.String(255))
 
@@ -75,3 +74,14 @@ class Stock(db.Model):
 
     def __repr__(self):
         return "<Stock %r>" % self.id
+
+
+class Comment(db.Model):
+    __tablename__ = 'Comment'
+    id = db.Column(db.Integer, primary_key=True)
+    like = db.Column(db.Boolean)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    product_id = db.Column(db.Integer, db.ForeignKey('Products.id'))
+
+    def __repr__(self):
+        return "<Comment %r>" % self.id

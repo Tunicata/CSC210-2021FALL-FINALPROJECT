@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required, current_user
 from . import db
-from .models import User
+from .models import User, Order
 
 auth = Blueprint('auth', __name__)
 
@@ -44,7 +44,12 @@ def signup_post():
         flash('Email address already exists.')
         return redirect(url_for('auth.signup'))
 
-    new_user = User(email=email, password_hash=generate_password_hash(password, method='sha256'), wallet=100., admin=False)
+    new_user = User(
+        email=email,
+        password_hash=generate_password_hash(password, method='sha256'),
+        wallet=100.,
+        admin=False
+    )
 
     db.session.add(new_user)
     db.session.commit()
@@ -60,8 +65,8 @@ def logout():
     return redirect(url_for('app.index'))
 
 
-@auth.route('/profile/<string:user_id>')
+@auth.route('/profile')
 @login_required
-def profile(user_id):
-    user_id = current_user.id
-    pass
+def profile():
+    orders = Order.query.filter_by(user_id=current_user.id).all()
+    return render_template('profile.html', current_user=current_user, orders=orders)

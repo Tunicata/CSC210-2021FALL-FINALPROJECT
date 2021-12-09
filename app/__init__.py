@@ -21,6 +21,17 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] =\
         'sqlite:///' + os.path.join(basedir, 'data.sqlite')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    # app.config.update(dict(
+    #     DEBUG=True,
+    #     MAIL_SERVER='smtp.qq.com',
+    #     MAIL_PORT=25,
+    #     MAIL_USE_TLS=True,
+    #     MAIL_USE_SSL=False,
+    #     MAIL_USERNAME='599012428@qq.com',
+    #     MAIL_PASSWORD='llkicsgbsinabcdi',
+    # ))
+    #
+    # mail = Mail(app)
 
     bootstrap = Bootstrap(app)
     moment = Moment(app)

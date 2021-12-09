@@ -1,6 +1,6 @@
 from flask import Flask, Blueprint, render_template, request, session, redirect, url_for, flash
 from flask_login import current_user
-from .models import Products, Cart, User
+from .models import Products, Cart, User, Order
 from . import db
 from flask_login import login_required
 from datetime import datetime
@@ -153,32 +153,125 @@ def top_up_user():
     return redirect(url_for('app.index'))
 
 
+@app.route("/cart")
+@login_required
+def cart():
+    curr_cart = Cart.query.filter_by(user_id=current_user.id).order_by(Cart.add_time)
+    return render_template('cart.html', cart=curr_cart, Products=Products)
+
+
 @app.route("/cart_add/<string:curr_product_id>")
 @login_required
 def cart_add(curr_product_id):
-    cart = Cart.query.filter_by(product_id=curr_product_id).first()
-
-    if cart:
-        cart.number = cart.number + 1
-
-    else:
-        cart = Cart(
-            products_id=curr_product_id,
-            user_id=current_user.id,
-            number=request.args.get('number'),
-            add_time=datetime.now
-        )
-
-        db.session.add(cart)
-
     try:
-        db.session.commit()
+        cart = Cart.query.filter_by(products_id=curr_product_id).first()
+        product = Products.query.filter_by(id=curr_product_id).first()
+
+        if cart:
+            cart.number = cart.number + 1
+
+        else:
+            cart = Cart(
+                products_id=curr_product_id,
+                user_id=current_user.id,
+                number=1,
+                add_time=datetime.now()
+            )
+            db.session.add(cart)
+
+        if cart.number > product.stockAmount:
+            flash("Insufficient Stock!")
+        else:
+            db.session.commit()
+
         return redirect(url_for('app.index'))
+
     except:
         return render_template('error.html')
 
 
-@app.route("/check_out")
+@app.route("/cart_modify_num/<string:cart_id>")
 @login_required
-def check_out():
-    return redirect(url_for('app.index'))
+def cart_modify_num(cart_id):
+    try:
+        target = Cart.query.filter_by(id=abs(int(cart_id))).first()
+        product = Products.query.filter_by(id=target.products_id).first()
+
+        if int(cart_id) > 0:
+            target.number = target.number + 1
+        else:
+            target.number = target.number - 1
+        if not target.number:
+            db.session.delete(target)
+
+        if target.number > product.stockAmount:
+            flash("Insufficient Stock!")
+        else:
+            db.session.commit()
+
+        return redirect(url_for('app.cart'))
+    except:
+        return render_template('error.html')
+
+
+@app.route("/cart_delete/<string:cart_id>")
+@login_required
+def cart_delete(cart_id):
+    try:
+        target = Cart.query.filter_by(id=cart_id).first()
+        db.session.delete(target)
+        db.session.commit()
+        return redirect(url_for('app.cart'))
+    except:
+        return render_template('error.html')
+
+
+@app.route("/clear_cart")
+@login_required
+def clear_cart():
+    try:
+        targets = Cart.query.filter_by(user_id=current_user.id).all()
+        [db.session.delete(target) for target in targets]
+        db.session.commit()
+        return redirect(url_for('app.cart'))
+    except:
+        return render_template('error.html')
+
+
+@app.route("/check_out/<float:total_price>")
+@login_required
+def check_out(total_price):
+    insufficient_stock = []
+    try:
+        if total_price:
+            if current_user.wallet >= total_price:
+                curr_cart = Cart.query.filter_by(user_id=current_user.id).order_by(Cart.add_time)
+                orders = []
+                for cart_item in curr_cart:
+                    product = Products.query.filter_by(id=cart_item.products_id).first()
+                    if cart_item.number <= product.stockAmount:
+                        product.stockAmount -= cart_item.number
+                        for i in range(cart_item.number):
+                            order = Order(
+                                user_id=cart_item.user_id,
+                                product_id=cart_item.products_id,
+                                place_time=datetime.now(),
+                                cdk=""
+                            )
+                            orders.append(order)
+                            db.session.add(order)
+                        current_user.wallet = current_user.wallet - product.originalPrice
+                    else:
+                        insufficient_stock.append(product.title)
+                    db.session.delete(cart_item)
+                db.session.commit()
+                if insufficient_stock:
+                    flash("the following orders are incomplete yet due to insufficient stock: " + str(insufficient_stock))
+                return render_template('purchase_success.html', orders=orders, products=Products)
+            else:
+                flash("Insufficient balance!")
+        else:
+            flash("Your Cart is Empty!")
+        return redirect(url_for('app.cart'))
+    except:
+        return render_template('error.html')
