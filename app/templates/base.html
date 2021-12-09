@@ -17,14 +17,21 @@
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li><a href="{{url_for('app.table')}}">Stock Management</a></li>
-        <li><a href="{{url_for('app.table')}}">User Management</a></li>
+        <li><a href="{{url_for('app.user_table')}}">User Management</a></li>
       </ul>
+
       <ul class="nav navbar-nav navbar-right">
         <li><a href="{{url_for('auth.signup')}}">Sign Up</a></li>
         <li><a href="{{url_for('auth.login')}}">Log In</a></li>
         <li><a href="{{url_for('auth.logout')}}">Log Out</a></li>
+        <li><a href="{{url_for('auth.info', user_id=current_user.id)}}">My Page</a></li>
       </ul>
     </div>
+    {% if current_user.email%}
+        <h4>Hi, {{current_user.email}}! This is your wallet balance: ${{current_user.wallet}}</h4>
+    {% else %}
+        <h4>Hi, Guest! </h4>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

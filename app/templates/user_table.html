@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block page_content %}
+<div class="page-header">
+</div>
+<div class="container">
+   <table style="width: 100%; table-layout: fixed; " id="UserTable">
+    <tr style="border: 1px solid black; border-collapse: collapse;">
+        <th style="text-align: center"><b>ID</b></th>
+        <th style="text-align: center"><b>email</b></th>
+        <th style="text-align: center"><b>wallet balance</b></th>
+        <th></th>
+        <th></th>
+    </tr>
+    {% for user in users %}
+        {% if not user.admin %}
+        <tr style="border: 1px solid black; border-collapse: collapse;">
+            <td style="text-align: center">{{user.id}}</td>
+            <td>{{user.email}}</td>
+            <td style="text-align: center">{{user.wallet}}</td>
+            <td style="text-align: center"><a href="{{url_for('app.delete_user', user_id=user.id)}}" class="btn btn-danger btn-small">Delete</a></td>
+        </tr>
+        {% endif %}
+    {% endfor %}
+</table>
+</div>
+{% endblock %}

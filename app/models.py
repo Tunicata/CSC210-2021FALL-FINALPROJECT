@@ -27,9 +27,11 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
+    wallet = db.Column(db.Float)
+    admin = db.Column(db.Boolean)
 
     def __repr__(self):
-        return "<User %r>" % self.manager
+        return "<User %r>" % self.id
 
     def is_authenticated(self):
         return True
@@ -39,16 +41,6 @@ class User(UserMixin, db.Model):
 
     def is_anonymous(self):
         return False
-
-
-class Admin(db.Model):
-    __tablename__ = "Admin"
-    id = db.Column(db.Integer, primary_key=True)
-    manager = db.Column(db.String(100), unique=True)
-    password = db.Column(db.String(100))
-
-    def __repr__(self):
-        return "<Admin %r>" % self.manager
 
 
 class Cart(db.Model):
