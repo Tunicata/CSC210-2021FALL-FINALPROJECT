@@ -3,8 +3,11 @@
 <div class="page-header">
 </div>
 <div class="container">
-    <h2>Email Address: {{ current_user.email }}</h2>
+    <h2>Current Email Address: {{ current_user.email }}</h2>
+    <a href="{{url_for('auth.profile')}}" class="btn btn-primary btn-small"> Change Email Address </a>
+    <a href="{{url_for('auth.profile')}}" class="btn btn-primary btn-small"> Change Password </a>
     <h2>Wallet Balance: {{ current_user.wallet }}</h2>
+    <a href="{{url_for('auth.profile')}}" class="btn btn-primary btn-small">Top Up</a>
     <h2>Order History</h2>
 
    <table style="width: 100%; table-layout: fixed; " id="OrderTable">
