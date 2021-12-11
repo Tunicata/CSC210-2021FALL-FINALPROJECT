@@ -28,6 +28,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     wallet = db.Column(db.Float)
     admin = db.Column(db.Boolean)
+    verify_code = db.Column(db.Integer)
 
     def __repr__(self):
         return "<User %r>" % self.id

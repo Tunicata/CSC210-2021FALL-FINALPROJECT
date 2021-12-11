@@ -1,8 +1,9 @@
 from flask import Flask, Blueprint, render_template, request, session, redirect, url_for, flash
 from flask_login import current_user
 from .models import Products, Cart, User, Order, Comment
-from . import db
+from . import db, mail, flask_app
 from flask_login import login_required
+from flask_mail import Message
 from datetime import datetime
 
 app = Blueprint('app', __name__)
@@ -314,3 +315,6 @@ def leave_comment(order_id):
             return render_template('error.html')
     else:
         return render_template('comment.html', order_id=order_id)
+
+
+
