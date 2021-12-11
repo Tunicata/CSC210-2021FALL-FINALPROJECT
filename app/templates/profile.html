@@ -4,28 +4,40 @@
 </div>
 <div class="container">
     <h2>Current Email Address: {{ current_user.email }}</h2>
-    <a href="{{url_for('auth.profile')}}" class="btn btn-primary btn-small"> Change Email Address </a>
-    <a href="{{url_for('auth.profile')}}" class="btn btn-primary btn-small"> Change Password </a>
+    <a href="{{url_for('auth.change_email_address')}}" class="btn btn-primary btn-small"> Change Email Address </a>
+    <a href="{{url_for('auth.change_password')}}" class="btn btn-primary btn-small"> Change Password </a>
     <h2>Wallet Balance: {{ current_user.wallet }}</h2>
-    <a href="{{url_for('auth.profile')}}" class="btn btn-primary btn-small">Top Up</a>
-    <h2>Order History</h2>
 
-   <table style="width: 100%; table-layout: fixed; " id="OrderTable">
+    <form action="{{url_for('auth.profile')}}" METHOD="POST">
+        <div class="form-group">
+           <label for="amount">Top up Amount: </label>
+           <input type="text" class="form-control" id="amount" name="amount">
+        </div>
+        <button type="submit" class="btn btn-primary">Top Up</button>
+   </form><br>
+
+    <h2>Order History</h2>
+    <table style="width: 100%; table-layout: fixed; " id="OrderTable">
     <tr style="border: 1px solid black; border-collapse: collapse;">
         <th style="text-align: center"><b>ID</b></th>
         <th style="text-align: center"><b>Product</b></th>
+        <th></th>
         <th style="text-align: center"><b>Add Date</b></th>
         <th></th>
         <th></th>
     </tr>
     {% for order in orders %}
-    <tr style="border: 1px solid black; border-collapse: collapse;">
-        <td style="text-align: center">{{order.id}}</td>
-        <td style="text-align: center">{{order.product_id}}</td>
-        <td style="text-align: center">{{order.place_time}}</td>
-        <td style="text-align: center"><a href="{{url_for('auth.profile')}}" class="btn btn-primary btn-small">Cancel</a></td>
-        <td style="text-align: center"><a href="{{url_for('auth.profile')}}" class="btn btn-primary btn-small">Edit Comment</a></td>
-    </tr>
+        {% set product = Products.query.filter_by(id=order.product_id).first() %}
+        <tr style="border: 1px solid black; border-collapse: collapse;">
+            <td style="text-align: center">{{order.id}}</td>
+            <td><img src="{{product.imgLink}}" style="width:90px; height:70px" alt=""></td>
+            <td>{{product.title}}</td>
+            <td style="text-align: center">{{order.place_time}}</td>
+            <td style="text-align: center"><a href="{{url_for('app.cancel_order', order_id=order.id)}}" class="btn btn-primary btn-small">Cancel</a></td>
+            {% if not Comments.query.filter_by(product_id=product.id, user_id=current_user.id).first().id%}
+                <td style="text-align: center"><a href="{{url_for('app.leave_comment', order_id=order.id)}}" class="btn btn-primary btn-small">Leave a Comment</a></td>
+            {% endif %}
+        </tr>
     {% endfor %}
 </table>
 </div>

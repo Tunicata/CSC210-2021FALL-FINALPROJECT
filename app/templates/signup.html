@@ -6,11 +6,6 @@
   <div class="row">
     <div class="col-sm-8">
       <div class="card">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <div class="notification is-danger">{{ messages[0] }} Go to <a href="{{ url_for('auth.login') }}">login page</a>.</div>
-        {% endif %}
-        {% endwith %}
         <div class="card-body">
           <!-- Makes POST request to /register route -->
           <form action="/signup" method="POST">

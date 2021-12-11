@@ -13,12 +13,12 @@ login_manager.login_view = 'auth.login'
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+
 # Instantiate the Flask class to the variable: app
 def create_app():
     app = Flask(__name__)
-
     app.config['SECRET_KEY'] = 'SECRET_KEY'
-    app.config['SQLALCHEMY_DATABASE_URI'] =\
+    app.config['SQLALCHEMY_DATABASE_URI'] = \
         'sqlite:///' + os.path.join(basedir, 'data.sqlite')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     # app.config.update(dict(

@@ -12,7 +12,6 @@
         <th style="text-align: center"><b>Image</b></th>
         <th style="text-align: center"><b>Product</b></th>
         <th style="text-align: center"><b>Add Date</b></th>
-        <th></th>
     </tr>
     {% for order in orders %}
     {% set product = products.query.filter_by(id=order.product_id).first() %}
@@ -21,7 +20,6 @@
         <td><img src="{{product.imgLink}}" style="width:90px; height:70px" alt=""></td>
         <td>{{product.title}}</td>
         <td style="text-align: center">{{order.place_time}}</td>
-        <td style="text-align: center"><a href="{{url_for('auth.profile')}}" class="btn btn-primary btn-small">Leave a Comment</a></td>
     </tr>
     {% endfor %}
 </table>

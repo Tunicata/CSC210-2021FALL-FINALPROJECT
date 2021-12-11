@@ -1,31 +1,47 @@
 {% extends "base.html" %}
 <!-- {% import "bootstrap/wtf.html" as wtf %} -->
 {% block page_content %}
-<div class="page-header">
-    <span style="font-size: 24px!important; line-height: 32px!important;">{{item.title}}</span><br>
-    <ul class="list-inline">
-        <li><a href="{{url_for(category)}}">{{item.category}}</a></li>
-    </ul>
-</div>
-<div class="container">
-    <div class="row">
-        <div class="col-md-5">
-            <a href="{{item.imgLink}}" target="_blank" rel="noopener noreferrer">
-                <img src="{{item.imgLink}}" style="width:450px; height:350px" alt="">
-            </a><br><br>
+    <div class="page-header">
+        <span style="font-size: 24px!important; line-height: 32px!important;">{{item.title}}</span><br>
+        <ul class="list-inline">
+            <li><a href="{{url_for(category)}}">{{item.category}}</a></li>
+        </ul>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5">
+                <a href="{{item.imgLink}}" target="_blank" rel="noopener noreferrer">
+                    <img src="{{item.imgLink}}" style="width:450px; height:350px" alt="">
+                </a><br><br>
+            </div>
+            <div class="col-md-5">
+                {% if item.stockAmount != 0  %}
+                <h3 style="color:green;"><b>In Stock: {{item.stockAmount}}</b></h3>
+                {% else %}
+                <h3 style="color:red;"><b>Out of Stock</b></h3>
+                {% endif %}
+                <h4><b>Price: </b>${{item.originalPrice}}</h4>
+                <h4><b>Type: </b><a href="{{url_for('app.index', category=item.category)}}">{{item.category}}</a></h4>
+                <a href="{{url_for('app.index')}}" class="btn btn-primary">
+                    <b>Back to Home</b>
+                </a>
+            </div>
         </div>
-        <div class="col-md-5">
-            {% if item.stockAmount != 0  %}
-            <h3 style="color:green;"><b>In Stock: {{item.stockAmount}}</b></h3>
-            {% else %}
-            <h3 style="color:red;"><b>Out of Stock</b></h3>
-            {% endif %}
-            <h4><b>Price: </b>${{item.originalPrice}}</h4>
-            <h4><b>Type: </b><a href="{{url_for('app.index', category=item.category)}}">{{item.category}}</a></h4>
-            <a href="{{url_for('app.index')}}" class="btn btn-primary">
-                <b>Back to Home</b>
-            </a>
-        </div>
-    </div>        
-</div>
+    </div>
+
+    <table style="width: 100%; table-layout: fixed; " id="OrderTable">
+        <tr style="border: 1px solid black; border-collapse: collapse;">
+            <th style="text-align: center"><b>User</b></th>
+            <th style="text-align: center"><b>Comment</b></th>
+            <th></th>
+            <th></th>
+        </tr>
+        {% for comment in comments %}
+            <tr style="border: 1px solid black; border-collapse: collapse;">
+                <td style="text-align: center">{{comment.user_id}}</td>
+                <td style="text-align: center">{{comment.text}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
 {% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block page_content %}
+
+    <form action="{{url_for('app.leave_comment', order_id=order_id)}}" METHOD="POST">
+        <div class="form-group">
+            <label for="comment">Tell how you feel about the game:</label><br>
+            <textarea id="comment" name="comment" rows="10" cols="66">Write down your evaluation here...</textarea>
+        </div><br>
+        <button type="submit" class="btn btn-primary">submit</button>
+   </form>
+
+{% endblock %}
+
+
+
+

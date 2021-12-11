@@ -79,7 +79,8 @@ class Stock(db.Model):
 class Comment(db.Model):
     __tablename__ = 'Comment'
     id = db.Column(db.Integer, primary_key=True)
-    like = db.Column(db.Boolean)
+    text = db.Column((db.String(255)))
+    order_id = db.Column(db.Integer, db.ForeignKey('Order.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     product_id = db.Column(db.Integer, db.ForeignKey('Products.id'))
 

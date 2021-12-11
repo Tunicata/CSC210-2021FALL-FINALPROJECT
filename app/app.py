@@ -1,6 +1,6 @@
 from flask import Flask, Blueprint, render_template, request, session, redirect, url_for, flash
 from flask_login import current_user
-from .models import Products, Cart, User, Order
+from .models import Products, Cart, User, Order, Comment
 from . import db
 from flask_login import login_required
 from datetime import datetime
@@ -121,7 +121,8 @@ def update(id):
 def item(id):
     item = Products.query.filter_by(id=id).first()
     category = get_category_func(item.category)
-    return render_template('item.html', item=item, category=category)
+    comments = Comment.query.filter_by(product_id=id)
+    return render_template('item.html', item=item, category=category, comments=comments)
 
 
 @app.route('/user_management', methods=['GET', 'POST'])
@@ -266,7 +267,8 @@ def check_out(total_price):
                     db.session.delete(cart_item)
                 db.session.commit()
                 if insufficient_stock:
-                    flash("the following orders are incomplete yet due to insufficient stock: " + str(insufficient_stock))
+                    flash(
+                        "the following orders are incomplete yet due to insufficient stock: " + str(insufficient_stock))
                 return render_template('purchase_success.html', orders=orders, products=Products)
             else:
                 flash("Insufficient balance!")
@@ -275,3 +277,40 @@ def check_out(total_price):
         return redirect(url_for('app.cart'))
     except:
         return render_template('error.html')
+
+
+@app.route("/cancel_order/<string:order_id>")
+@login_required
+def cancel_order(order_id):
+    try:
+        target = Order.query.filter_by(id=order_id).first()
+        target_comment = Comment.query.filter_by(order_id=order_id).first()
+        product = Products.query.filter_by(id=target.product_id).first()
+        current_user.wallet += product.originalPrice
+        db.session.delete(target)
+        db.session.delete(target_comment)
+        db.session.commit()
+        return redirect(url_for('auth.profile'))
+    except:
+        return render_template('error.html')
+
+
+@app.route("/leave_comment/<string:order_id>", methods=['GET', 'POST'])
+@login_required
+def leave_comment(order_id):
+    if request.method == 'POST':
+        comment_text = request.form['comment']
+        order = Order.query.filter_by(id=order_id).first()
+        new_comment = Comment(text=comment_text,
+                              user_id=order.user_id,
+                              order_id=order_id,
+                              product_id=order.product_id,
+                              )
+        try:
+            db.session.add(new_comment)
+            db.session.commit()
+            return redirect(url_for('auth.profile'))
+        except:
+            return render_template('error.html')
+    else:
+        return render_template('comment.html', order_id=order_id)
